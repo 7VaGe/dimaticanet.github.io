@@ -1,0 +1,102 @@
+/* =============================================================
+   SAP MIGRATION TIMELINE — componente interattivo (4 fasi)
+   Costruito sui token esistenti del sito. State machine su [data-phase].
+   Desktop: timeline orizzontale. Mobile/Tablet: reflow verticale.
+   ============================================================= */
+.mt {
+  --mt-green:  #2fd58a;
+  --mt-amber:  #f5b73d;
+  --mt-launch: var(--accent-2);
+}
+
+/* ---------- Controllo temporale (timeline) ---------- */
+.mt-timeline { position: relative; margin: 2.2rem 0 2.6rem; }
+.mt-track { position: relative; display: flex; justify-content: space-between; align-items: flex-start; gap: .5rem; }
+
+/* Linea base + riempimento progressivo (orizzontale) */
+.mt-track::before {
+  content: ""; position: absolute; left: 12.5%; right: 12.5%; top: 13px; height: 3px;
+  background: var(--border); border-radius: 2px;
+}
+.mt-fill {
+  position: absolute; left: 12.5%; top: 13px; height: 3px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  width: calc(var(--p, 0) * 75%);
+  transition: width .45s var(--ease);
+}
+
+/* Nodi/step della timeline (bottoni accessibili) */
+.mt-step {
+  flex: 1 1 0; min-width: 0; cursor: pointer; padding: 0;
+  background: none; border: 0; -webkit-appearance: none; appearance: none;
+  display: flex; flex-direction: column; align-items: center; gap: .6rem; text-align: center;
+}
+.mt-step__dot {
+  position: relative; z-index: 2; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg-alt); border: 2px solid var(--border); color: #061021;
+  display: grid; place-items: center; font-size: .78rem; font-family: var(--font-head); font-weight: 700;
+  transition: background .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+.mt-step.is-done .mt-step__dot,
+.mt-step.is-active .mt-step__dot { background: var(--accent-2); border-color: var(--accent-2); }
+.mt-step.is-active .mt-step__dot { box-shadow: 0 0 0 5px rgba(34,211,238,.18); }
+.mt-step__label { font-family: var(--font-head); font-size: .82rem; color: var(--text-muted); line-height: 1.2; transition: color .3s; }
+.mt-step__label small { display: block; font-family: var(--font-body); font-size: .7rem; color: var(--text-dim); margin-top: .15rem; }
+.mt-step.is-active .mt-step__label { color: var(--text); }
+.mt-step:focus-visible .mt-step__dot { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+
+/* Slider per il "drag" (solo desktop; su mobile i nodi restano cliccabili) */
+.mt-range { width: 100%; margin-top: 1.3rem; accent-color: var(--accent-2); cursor: pointer; }
+.mt-range:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 4px; }
+
+/* ---------- Finestre di dettaglio ---------- */
+.mt-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+.mt-panel {
+  min-width: 0; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: clamp(1.3rem, 3vw, 1.8rem);
+}
+.mt-panel__kicker { font-family: var(--font-head); font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--accent-2); }
+.mt-panel__body { margin-top: .85rem; color: var(--text-muted); font-size: .98rem; line-height: 1.6; transition: opacity .3s var(--ease); }
+.mt-panel__body.is-fade { opacity: 0; }
+
+/* Stato azienda cliente: badge "semaforo" per tono */
+.mt-status { display: flex; flex-direction: column; gap: .9rem; }
+.mt-status__badge {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: .5rem;
+  padding: .42rem .9rem; border-radius: 999px; border: 1px solid;
+  font-family: var(--font-head); font-size: .85rem; font-weight: 500;
+  transition: opacity .3s, color .3s, background .3s, border-color .3s;
+}
+.mt-status__badge.is-fade { opacity: 0; }
+.mt-status__badge .dot { width: 9px; height: 9px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+.mt-status[data-tone="green"]  .mt-status__badge { color: var(--mt-green);  border-color: rgba(47,213,138,.4);  background: rgba(47,213,138,.10); }
+.mt-status[data-tone="amber"]  .mt-status__badge { color: var(--mt-amber);  border-color: rgba(245,183,61,.4);  background: rgba(245,183,61,.10); }
+.mt-status[data-tone="launch"] .mt-status__badge { color: var(--mt-launch); border-color: rgba(34,211,238,.45); background: rgba(34,211,238,.10); }
+
+/* ---------- Disclaimer di continuità (sempre visibile) ---------- */
+.mt-note { margin-top: 1.5rem; font-size: .78rem; line-height: 1.5; color: var(--text-dim); border-left: 2px solid var(--border); padding-left: .85rem; }
+
+/* ---------- Box di conversione (compare alla Fase 4) ---------- */
+.mt-cta { display: none; text-align: center; margin-top: 1.6rem; padding: clamp(1.6rem, 4vw, 2.6rem);
+  border-radius: calc(var(--radius) + 4px); border: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(59,130,246,.14), rgba(34,211,238,.08)); }
+.mt[data-phase="4"] .mt-cta { display: block; animation: mtRise .45s var(--ease) both; }
+.mt-cta h3 { font-family: var(--font-head); font-size: clamp(1.2rem, 2.6vw, 1.6rem); color: var(--text); max-width: 640px; margin: 0 auto .6rem; }
+.mt-cta p { max-width: 600px; margin: 0 auto 1.5rem; color: var(--text-muted); }
+@keyframes mtRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ---------- RESPONSIVE: reflow verticale (mobile/tablet) ---------- */
+@media (max-width: 720px) {
+  .mt-track { flex-direction: column; align-items: stretch; gap: 0; }
+  .mt-track::before { left: 13px; right: auto; top: 14px; bottom: 14px; width: 3px; height: auto; }
+  .mt-fill { left: 13px; top: 14px; width: 3px; height: calc(var(--p, 0) * (100% - 28px)); transition: height .45s var(--ease); }
+  .mt-step { flex-direction: row; align-items: center; gap: .9rem; padding: .5rem 0; }
+  .mt-step__label { text-align: left; }
+  .mt-range { display: none; }
+  .mt-panels { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mt-fill, .mt-panel__body, .mt-status__badge, .mt-step__dot { transition: none !important; }
+  .mt[data-phase="4"] .mt-cta { animation: none; }
+}

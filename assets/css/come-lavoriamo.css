@@ -1,0 +1,227 @@
+/* =============================================================
+   COME LAVORIAMO — Esperienza narrativa "Il metodo Dimatica"
+   Costruita SUI token esistenti del sito (nessun nuovo design system):
+   usa var(--accent), --accent-2, --surface, --border, --radius, --ease,
+   --font-head, .btn, .field, ecc. Aggiunge solo classi .cl-* e due
+   colori semantici per la narrazione (rosso = blocco, verde = risolto).
+
+   Stato centralizzato sul container radice .cl via [data-state]:
+   idle -> blocked -> analyzing -> solved
+   ============================================================= */
+.cl {
+  --cl-line:    var(--accent-2);      /* colore del "flusso dati" corrente */
+  --cl-danger:  #fb5b6b;              /* blocco / criticità */
+  --cl-success: #2fd58a;              /* processo ottimizzato */
+  --cl-flow-dur: 2.6s;
+  position: relative;
+}
+
+/* ---- Layout multi-window: mappa (sx) + pannello contestuale (dx) ---- */
+.cl-stage {
+  display: grid;
+  grid-template-columns: 1.12fr 0.88fr;
+  gap: 1.6rem;
+  align-items: stretch;
+}
+.cl-window, .cl-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+}
+.cl-window { position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.cl-window__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.6rem; }
+.cl-window__title { font-family: var(--font-head); font-size: .95rem; color: var(--text); letter-spacing: .01em; }
+.cl-badge {
+  font-family: var(--font-head); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+  padding: .3rem .7rem; border-radius: 999px; border: 1px solid var(--border); color: var(--text-muted);
+  display: inline-flex; align-items: center; gap: .45rem; transition: color .4s, border-color .4s;
+}
+.cl-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cl-line); box-shadow: 0 0 10px var(--cl-line); transition: background .4s, box-shadow .4s; }
+.cl[data-state="blocked"]   .cl-badge, .cl[data-state="analyzing"] .cl-badge { color: var(--cl-danger); border-color: rgba(251,91,107,.4); }
+.cl[data-state="solved"]    .cl-badge { color: var(--cl-success); border-color: rgba(47,213,138,.4); }
+
+/* ============================================================
+   MAPPA ECOSISTEMA — flusso reparti (reflow row -> column)
+   ============================================================ */
+.cl-flow { display: flex; align-items: center; justify-content: center; flex: 1; margin: auto 0; max-width: 100%; min-width: 0; flex-wrap: nowrap; }
+.cl-stage > *, .cl-window, .cl-panel, .cl-flow, .cl-node { min-width: 0; }   /* contenimento rigido: nulla forza la larghezza oltre la card */
+.cl-node {
+  position: relative; flex: 0 0 auto;
+  width: 90px; min-height: 92px; padding: .8rem .4rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .45rem; text-align: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border); border-radius: 14px;
+  transition: border-color .5s var(--ease), box-shadow .5s var(--ease), background .5s;
+}
+.cl-node__ic { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 10px; background: rgba(34,211,238,.12); color: var(--cl-line); transition: color .5s, background .5s; }
+.cl-node__ic svg { width: 19px; height: 19px; }
+.cl-node__label { font-family: var(--font-head); font-size: .68rem; line-height: 1.12; color: var(--text); }
+
+/* Glow/pulsazione dei nodi (Scena 0 — nulla è statico) */
+.cl-node::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  box-shadow: 0 0 0 0 var(--cl-line); opacity: .55;
+  animation: clNodeGlow 3.2s ease-in-out infinite;
+}
+@keyframes clNodeGlow {
+  0%, 100% { box-shadow: 0 0 10px -3px var(--cl-line); }
+  50%      { box-shadow: 0 0 20px 0 var(--cl-line); }
+}
+
+/* Connettore + pacchetto dati in movimento */
+.cl-link { position: relative; flex: 1 1 auto; min-width: 16px; height: 3px; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(148,161,189,.28), transparent); transition: background .5s; }
+.cl-link__pulse {
+  position: absolute; left: 0; top: calc(50% - 5px); width: 10px; height: 10px; border-radius: 50%;
+  background: var(--cl-line); box-shadow: 0 0 12px var(--cl-line);
+  transform: translateX(0); will-change: transform;
+  animation: clFlowX var(--cl-flow-dur) linear infinite;
+}
+@keyframes clFlowX { from { transform: translateX(0); } to { transform: translateX(var(--len, 90px)); } }
+
+/* Reflow VERTICALE (mobile/tablet): connettori in colonna, flusso su Y */
+.cl-flow.is-vertical { flex-direction: column; align-items: stretch; width: 100%; max-width: 300px; margin-inline: auto; }
+.cl-flow.is-vertical .cl-node { width: 100%; }
+.cl-flow.is-vertical .cl-link { width: 3px; height: 34px; flex: 0 0 34px; align-self: center; background: linear-gradient(180deg, transparent, rgba(148,161,189,.28), transparent); }
+.cl-flow.is-vertical .cl-link__pulse { left: calc(50% - 5px); top: 0; animation-name: clFlowY; }
+@keyframes clFlowY { from { transform: translateY(0); } to { transform: translateY(var(--len, 34px)); } }
+
+/* ---- Nodi interattivi (Scena 1: l'utente sceglie il reparto) ---- */
+.cl-node { cursor: pointer; }
+.cl-node:hover { border-color: var(--accent-2); background: rgba(255,255,255,0.07); }
+.cl-node:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+
+/* ---- Stato BLOCKED / ANALYZING: il flusso si ferma (class-based, per reparto) ---- */
+@keyframes clBlink { 0%, 60% { opacity: 1; } 61%, 100% { opacity: .35; } }
+
+/* Il "flusso dati" si congela quando c'è un blocco */
+.cl[data-state="blocked"]   .cl-link__pulse,
+.cl[data-state="analyzing"] .cl-link__pulse { animation-play-state: paused; opacity: .28; }
+
+/* Nodo scelto dall'utente = criticità (rosso + pulsazione) */
+.cl-node.is-blocked { border-color: var(--cl-danger); box-shadow: 0 0 26px -6px var(--cl-danger); }
+.cl-node.is-blocked .cl-node__ic { color: var(--cl-danger); background: rgba(251,91,107,.14); }
+.cl-node.is-blocked::after { animation: none; box-shadow: 0 0 18px 0 var(--cl-danger); opacity: .8; }
+
+/* Linea adiacente al blocco: rossa e lampeggiante */
+.cl-link.is-critical { --cl-line: var(--cl-danger); background: linear-gradient(90deg, transparent, rgba(251,91,107,.55), transparent); animation: clBlink 1s steps(2, end) infinite; }
+.cl-flow.is-vertical .cl-link.is-critical { background: linear-gradient(180deg, transparent, rgba(251,91,107,.55), transparent); }
+
+/* ---- Stato SOLVED: tutto verde, flusso più rapido ---- */
+.cl[data-state="solved"] { --cl-line: var(--cl-success); --cl-flow-dur: 1.5s; }
+.cl[data-state="solved"] .cl-link { background: linear-gradient(90deg, transparent, rgba(47,213,138,.4), transparent); }
+.cl[data-state="solved"] .cl-flow.is-vertical .cl-link { background: linear-gradient(180deg, transparent, rgba(47,213,138,.4), transparent); }
+.cl[data-state="solved"] .cl-node { border-color: rgba(47,213,138,.4); }
+
+/* ============================================================
+   PANNELLO CONTESTUALE (dx) — cambia contenuto per stato
+   ============================================================ */
+.cl-panel { display: flex; flex-direction: column; }
+.cl-block { display: none; }
+.cl-block.is-active { display: flex; flex-direction: column; gap: 1rem; animation: clRise .5s var(--ease) both; }
+@keyframes clRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+.cl-kicker { font-family: var(--font-head); font-size: .78rem; letter-spacing: .18em; text-transform: uppercase; color: var(--cl-line); transition: color .4s; }
+.cl-block h3 { font-family: var(--font-head); font-size: clamp(1.3rem, 2.4vw, 1.7rem); color: var(--text); line-height: 1.2; }
+.cl-block p { color: var(--text-muted); font-size: .96rem; }
+.cl-note { display: flex; gap: .7rem; align-items: flex-start; padding: .9rem 1rem; border-radius: var(--radius-sm); background: rgba(251,91,107,.10); border: 1px solid rgba(251,91,107,.28); color: #ffd7db; font-size: .9rem; }
+.cl-note svg { flex: none; width: 18px; height: 18px; color: var(--cl-danger); margin-top: 2px; }
+
+/* Stepper fasi umane del metodo Dimatica */
+.cl-steps { display: flex; flex-direction: column; gap: .6rem; margin: .4rem 0; }
+.cl-step { display: flex; align-items: center; gap: .7rem; padding: .6rem .8rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: rgba(255,255,255,0.04); color: var(--text-muted); font-size: .9rem; opacity: .5; transform: translateX(-6px); transition: opacity .4s var(--ease), transform .4s var(--ease), border-color .4s, color .4s; }
+.cl-step.is-done { opacity: 1; transform: none; border-color: rgba(34,211,238,.35); color: var(--text); }
+.cl-step__n { flex: none; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 7px; background: rgba(34,211,238,.14); color: var(--accent-2); font-family: var(--font-head); font-size: .8rem; }
+
+/* Simulatore — domande a risposta rapida (segmented) */
+.cl-q { margin-top: .3rem; }
+.cl-q__label { font-size: .88rem; color: var(--text); margin-bottom: .5rem; display: block; }
+.cl-seg { display: flex; gap: .5rem; flex-wrap: wrap; }
+.cl-seg button {
+  flex: 1 1 auto; min-width: 84px; padding: .55rem .7rem; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  font-family: var(--font-head); font-size: .88rem; color: var(--text-muted);
+  background: var(--bg-alt); border: 1px solid var(--border); border-radius: 999px;
+  transition: color .25s, border-color .25s, background .25s, box-shadow .25s;
+}
+.cl-seg button:hover { color: var(--text); }
+.cl-seg button[aria-pressed="true"] { color: #061021; background: var(--grad); background-size: 200% 100%; background-position: center; border-color: transparent; box-shadow: 0 8px 18px -12px rgba(34,211,238,.55); }
+.cl-seg button:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+
+/* Input paga oraria editabile */
+.cl-hourly { display: inline-flex; align-items: center; gap: .5rem; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 999px; padding: .35rem .9rem; transition: border-color .2s, box-shadow .2s; }
+.cl-hourly:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,.18); }
+.cl-hourly__cur { font-family: var(--font-head); color: var(--accent-2); font-weight: 600; }
+.cl-hourly__suffix { color: var(--text-dim); font-size: .85rem; }
+.cl-hourly input { width: 70px; background: transparent; border: 0; color: var(--text); font-family: var(--font-head); font-size: 1.1rem; font-weight: 600; padding: .3rem 0; }
+.cl-hourly input:focus { outline: none; }
+
+/* Controllo "ordini": preset rapidi + inserimento manuale (max 500) */
+.cl-orders { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+.cl-orders .cl-seg { flex: 0 0 auto; }
+.cl-orders .cl-hourly { flex: 0 0 auto; padding-block: .3rem; }
+.cl-orders .cl-hourly input { width: 62px; font-size: 1rem; }
+.cl-orders__or { font-size: .8rem; color: var(--text-dim); }
+
+/* Disclaimer metodologico */
+.cl-disclaimer { font-size: .74rem; line-height: 1.45; color: var(--text-dim); border-left: 2px solid var(--border); padding-left: .7rem; margin-top: .2rem; }
+.cl-disclaimer a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px; }
+.cl-disclaimer a:hover { color: var(--accent-2); }
+
+/* Contatori ROI */
+.cl-roi { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: .4rem; }
+.cl-roi__cell { text-align: center; padding: .9rem .35rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: rgba(255,255,255,0.04); overflow: hidden; min-width: 0; }
+/* Numero su UNA riga a qualsiasi scala: nowrap + cifre tabellari + font che si adatta */
+.cl-roi__num { font-family: var(--font-head); font-size: clamp(1rem, 1.9vw, 1.4rem); font-weight: 700; color: var(--text); white-space: nowrap; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.cl-roi__num.is-cost { color: var(--cl-danger); }
+.cl-roi__lbl { font-size: .72rem; color: var(--text-dim); margin-top: .25rem; line-height: 1.2; }
+
+/* Dashboard KPI (solved) */
+.cl-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin: .3rem 0 .4rem; }
+.cl-kpi { text-align: center; padding: 1rem .5rem; border: 1px solid rgba(47,213,138,.3); border-radius: var(--radius-sm); background: rgba(47,213,138,.06); }
+.cl-kpi__num { font-family: var(--font-head); font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; color: var(--cl-success); }
+.cl-kpi__lbl { font-size: .74rem; color: var(--text-muted); margin-top: .3rem; }
+
+/* Mini-form finale */
+.cl-form { display: grid; gap: .7rem; margin-top: .3rem; }
+.cl-form[hidden] { display: none; }   /* l'attributo hidden deve vincere sul display:grid */
+.cl-form .cl-inline { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+.cl-form input { width: 100%; min-width: 0; box-sizing: border-box; background: var(--bg-alt); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .8rem 1rem; color: var(--text); font-family: inherit; font-size: .95rem; }
+.cl-form input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,.18); }
+.cl-status { font-size: .9rem; padding: .7rem 1rem; border-radius: var(--radius-sm); display: none; }
+.cl-status.ok { display: block; color: #8ff0c8; background: rgba(34,211,120,.1); border: 1px solid rgba(34,211,120,.3); }
+
+.cl-cta { margin-top: .5rem; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .cl-stage { grid-template-columns: 1fr; }
+  .cl-window { min-height: 300px; }
+}
+@media (max-width: 560px) {
+  .cl-inline { grid-template-columns: 1fr; }
+  .cl-roi, .cl-kpis { grid-template-columns: 1fr 1fr; }
+}
+
+/* Reflow VERTICALE della mappa garantito da CSS (indipendente dal timing del JS):
+   evita che il flusso orizzontale a 5 nodi sfori il viewport su mobile/tablet. */
+@media (max-width: 720px) {
+  .cl-flow { flex-direction: column; align-items: stretch; width: 100%; max-width: 320px; margin-inline: auto; }
+  .cl-flow .cl-node { width: 100%; }
+  .cl-flow .cl-link { width: 3px; height: 34px; flex: 0 0 34px; align-self: center; background: linear-gradient(180deg, transparent, rgba(148,161,189,.28), transparent); }
+  .cl-flow .cl-link__pulse { left: calc(50% - 5px); top: 0; animation-name: clFlowY; }
+  .cl[data-state="blocked"]   .cl-link.is-critical,
+  .cl[data-state="analyzing"] .cl-link.is-critical { background: linear-gradient(180deg, transparent, rgba(251,91,107,.55), transparent); }
+}
+
+/* ============================================================
+   RIDUZIONE MOVIMENTO (prefers-reduced-motion)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .cl-node::after, .cl-link__pulse, .cl-link[data-critical] { animation: none !important; }
+  .cl-block.is-active { animation: none; }
+  .cl-step { transition: none; }
+}

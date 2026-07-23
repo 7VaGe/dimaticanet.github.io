@@ -1,0 +1,23 @@
+VIDEO DI SFONDO DELL'HERO — istruzioni
+=======================================
+
+1) Metti qui il file chiamato esattamente:  hero.mp4
+   (l'hero lo carica già da: assets/video/hero.mp4)
+
+2) Requisiti consigliati per un loop pulito e leggero:
+   - Formato: MP4 (codec H.264) — opzionale anche hero.webm per compatibilità
+   - Durata: 10-20 secondi, con inizio/fine che combaciano (loop "seamless")
+   - Risoluzione: 1920x1080, orientamento orizzontale
+   - Peso: < 5 MB (comprimi bene: è di sfondo, non deve essere nitidissimo)
+   - Senza audio (viene riprodotto muto)
+
+3) Che tipo di video sceglierei (toni neutri/verdi, movimento LENTO e calmo,
+   così il testo sopra resta leggibile):
+   - Astratto: linee/particelle che fluiscono, o superfici morbide sfocate
+   - Mare/vela dall'alto (richiama l'identità Dimanautica), colori desaturati
+   - B-roll tecnologico rallentato: dati, schermi, team al lavoro (sfocato)
+
+4) Fallback: se il file non c'è, l'hero mostra il poster (assets/img/chi-siamo-1.jpg)
+   con un gradiente della palette — nessun errore visibile.
+
+Se vuoi, posso cercare io alcune clip royalty-free adatte e proportele.

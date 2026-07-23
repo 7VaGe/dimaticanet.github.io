@@ -1,0 +1,282 @@
+/* =============================================================
+   SAP VIM — landing page (Dimatica)
+   Componenti: Hero Toggle "Condizioni di navigazione",
+   Cockpit di Bordo VIM (fibra di carbonio), Timeline "La Rotta della Fattura".
+   Costruito sui token di style.css (--accent, --accent-2, --accent-3,
+   --carbon, --border, --radius, --ease). Metafora velica / regata SAP.
+   ============================================================= */
+
+.vim-hero { padding: calc(var(--nav-h) + 3.5rem) 0 3rem; position: relative; overflow: hidden; }
+.vim-hero__grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.vim-hero__grid > * { min-width: 0; }
+.vim-hero__copy h1 { margin: .6rem 0 1.2rem; }
+.vim-hero__copy .lead { margin-bottom: 2rem; }
+
+/* ---- Pannello toggle in fibra di carbonio ---- */
+.vim-hero__panel {
+  background: var(--surface);
+  border: 1px solid var(--line); border-radius: calc(var(--radius) + 4px);
+  padding: clamp(1.3rem, 3vw, 1.8rem);
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.vim-hero__panel::before {   /* filo luminoso superiore (lisca in gradiente) */
+  content: ""; position: absolute; left: 1.4rem; right: 1.4rem; top: 0; height: 2px; border-radius: 2px;
+  background: var(--grad); opacity: .8;
+}
+
+.vim-toggle__head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.vim-toggle__title { font-family: var(--font-head); font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--text-muted); }
+.vim-toggle__sea { font-family: var(--font-head); font-size: .85rem; font-weight: 600; transition: color .4s; }
+.vim-toggle[data-state="off"] .vim-toggle__sea { color: #c8891f; }
+.vim-toggle[data-state="on"]  .vim-toggle__sea { color: var(--accent); }
+
+/* Switch a due posizioni con thumb scorrevole */
+.vim-toggle__switch {
+  position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  background: var(--bg-alt); border: 1px solid var(--line); border-radius: 999px;
+  padding: 4px; margin-bottom: 1.6rem;
+}
+.vim-toggle__opt {
+  position: relative; z-index: 2; padding: .7rem .5rem; cursor: pointer;
+  background: none; border: 0; -webkit-appearance: none; appearance: none;
+  font-family: var(--font-head); font-size: .9rem; font-weight: 600; letter-spacing: .01em;
+  color: var(--text-muted); transition: color .3s var(--ease);
+}
+.vim-toggle__opt.is-active { color: #06121a; }
+.vim-toggle__opt:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 999px; }
+.vim-toggle__thumb {
+  position: absolute; z-index: 1; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px);
+  border-radius: 999px; background: linear-gradient(120deg, #f5b73d, #f59b3d);
+  transition: transform .4s var(--ease), background .4s var(--ease);
+  box-shadow: 0 6px 16px -8px rgba(0,0,0,.7);
+}
+.vim-toggle[data-state="on"] .vim-toggle__thumb { transform: translateX(100%); background: var(--grad-cta); }
+
+/* Barre metriche */
+.vim-metrics { display: flex; flex-direction: column; gap: 1rem; }
+.vim-metric__top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: .4rem; }
+.vim-metric__label { font-size: .9rem; color: var(--text-muted); }
+.vim-metric__val { font-family: var(--font-head); font-weight: 700; font-size: 1rem; color: var(--text); font-variant-numeric: tabular-nums; }
+.vim-metric__bar { height: 8px; border-radius: 999px; background: var(--bg-alt); overflow: hidden; }
+.vim-metric__bar span {
+  display: block; height: 100%; border-radius: inherit;
+  background: linear-gradient(90deg, #f5b73d, #f59b3d);
+  transition: width .6s var(--ease), background .5s var(--ease);
+}
+.vim-toggle[data-state="on"] ~ .vim-metrics .vim-metric__bar span { background: var(--grad-cta); }
+
+.vim-hero__note { margin-top: 1.4rem; font-size: .82rem; line-height: 1.5; color: var(--text-dim); border-left: 2px solid var(--accent-3); padding-left: .8rem; }
+
+/* ---- Vantaggi VIM: timone statico + accordion "a dropdown" ---- */
+.vim-adv { display: grid; grid-template-columns: auto 1fr; gap: clamp(1.2rem, 3vw, 2rem); align-items: start; }
+.vim-adv__wheel { width: clamp(120px, 20vw, 168px); aspect-ratio: 1; flex: none; }
+.vim-adv__wheel svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 12px 22px rgba(27,42,23,.24)); }
+.vim-adv__panel { min-width: 0; }
+.vim-adv__panel .eyebrow { margin-bottom: .4rem; }
+.vim-adv__title { font-family: var(--font-head); font-weight: 600; font-size: clamp(1.2rem, 2.4vw, 1.45rem); color: var(--ink); margin: .3rem 0 1rem; line-height: 1.25; }
+
+.acc__item { border-top: 1px solid var(--line); }
+.acc__item:last-child { border-bottom: 1px solid var(--line); }
+.acc__head {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .95rem .1rem; background: none; border: 0; cursor: pointer; text-align: left;
+  font-family: var(--font-head); font-weight: 600; font-size: 1rem; color: var(--ink);
+  transition: color .2s var(--ease);
+}
+.acc__head:hover { color: var(--accent); }
+.acc__head:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: var(--radius-sm); }
+.acc__chev { width: 18px; height: 18px; flex: none; color: var(--accent); transition: transform .3s var(--ease); }
+.acc__item.is-open .acc__chev { transform: rotate(180deg); }
+.acc__body { max-height: 0; overflow: hidden; transition: max-height .35s var(--ease); }
+.acc__body p { padding: 0 .1rem 1rem; margin: 0; color: var(--text-muted); font-size: .95rem; line-height: 1.55; }
+@media (prefers-reduced-motion: reduce) { .acc__body { transition: none; } .acc__chev { transition: none; } }
+@media (max-width: 920px) {
+  .vim-adv { grid-template-columns: 1fr; justify-items: center; text-align: left; }
+  .vim-adv__panel { width: 100%; }
+}
+
+/* =============================================================
+   COCKPIT DI BORDO VIM
+   ============================================================= */
+/* Video di sfondo della sezione (assets/video/SailingV.mp4), come l'hero */
+.cockpit-section { position: relative; overflow: hidden; }
+.cockpit-bg { position: absolute; inset: 0; z-index: 0; }
+.cockpit-bg__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cockpit-bg__overlay { position: absolute; inset: 0; background: color-mix(in srgb, var(--bg) 32%, transparent); }
+.cockpit-section > .container { position: relative; z-index: 1; }
+
+.cockpit {
+  background: var(--surface); border: 1px solid var(--line); border-radius: calc(var(--radius) + 6px);
+  padding: clamp(1.8rem, 4.5vw, 2.6rem);
+  box-shadow: var(--shadow); position: relative;
+}
+.cockpit::after {   /* cornice a "corda intrecciata" (rope) in palette — via mask, robusta su tutti i lati */
+  content: ""; position: absolute; inset: 8px; border-radius: var(--radius);
+  padding: 9px;
+  background: repeating-linear-gradient(45deg, #c9e29a 0 5px, #a9b98a 5px 8px, #7aa05c 8px 11px);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: .85; pointer-events: none;
+}
+.cockpit__gauges { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; position: relative; z-index: 1; }
+.cockpit__gauge {
+  display: flex; flex-direction: column; align-items: center; gap: .6rem; text-align: center;
+  padding: 1.1rem .6rem; cursor: pointer;
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  -webkit-appearance: none; appearance: none; color: var(--text-muted);
+  transition: border-color .3s, background .3s, transform .2s, color .3s;
+}
+.cockpit__gauge:hover { transform: translateY(-3px); border-color: var(--line-2); color: var(--ink); }
+.cockpit__gauge:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.cockpit__dial {
+  width: 54px; height: 54px; display: grid; place-items: center; border-radius: 50%;
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--accent);
+  transition: color .3s, background .3s, border-color .3s;
+}
+.cockpit__dial svg { width: 30px; height: 30px; }
+.cockpit__gname { font-family: var(--font-head); font-size: .84rem; font-weight: 600; color: inherit; line-height: 1.2; }
+.cockpit__gsub { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-dim); }
+.cockpit__gauge.is-active { background: var(--bg-alt); border-color: var(--accent); color: var(--ink); }
+.cockpit__gauge.is-active .cockpit__dial { color: var(--accent-ink); background: var(--lime); border-color: transparent; }
+
+.cockpit__readout {
+  margin-top: 1rem; position: relative; z-index: 1;
+  background: var(--bg-alt); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: clamp(1.3rem, 3vw, 2rem); min-height: 230px;
+}
+.cockpit__panel { display: grid; grid-template-columns: 1.4fr .9fr; gap: 2rem; align-items: center; animation: vimFade .45s var(--ease) both; }
+.cockpit__panel[hidden] { display: none; }
+@keyframes vimFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.cockpit__body h3 { font-size: 1.4rem; margin-bottom: .6rem; color: var(--ink); }
+.cockpit__body p { color: var(--text); font-size: 1.02rem; line-height: 1.65; margin-bottom: 1.1rem; }
+.cockpit__points { display: flex; flex-direction: column; gap: .6rem; }
+.cockpit__points li { position: relative; padding-left: 1.5rem; color: var(--text); font-size: .98rem; line-height: 1.5; }
+.cockpit__points li::before {
+  content: ""; position: absolute; left: 0; top: .4em; width: 11px; height: 11px;
+  border-radius: 3px; background: var(--accent);
+}
+
+/* Strumento circolare (telemetria) */
+.cockpit__gaugeview {
+  --val: 0;
+  justify-self: center; width: min(210px, 62vw); aspect-ratio: 1; border-radius: 50%;
+  background: conic-gradient(var(--accent) calc(var(--val) * 1%), var(--surface-2) 0);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  position: relative; transition: background .1s linear;
+}
+.cockpit__gaugeview::before {
+  content: ""; position: absolute; inset: 16px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--line);
+}
+.cockpit__gv-num { position: relative; z-index: 1; font-family: var(--font-head); font-weight: 700; font-size: clamp(1.8rem, 5vw, 2.6rem); color: var(--ink); font-variant-numeric: tabular-nums; }
+.cockpit__gv-cap { position: relative; z-index: 1; margin-top: .3rem; max-width: 72%; text-align: center; font-size: .74rem; letter-spacing: .04em; color: var(--text-dim); line-height: 1.25; }
+
+/* Anti-overflow: senza min-width:0 le etichette lunghe allargano la griglia oltre
+   il contenitore e la sezione (overflow:hidden) taglia la corda a destra e il fondo. */
+.cockpit { max-width: 100%; }
+.cockpit__gauges { min-width: 0; }
+.cockpit__gauge { min-width: 0; }
+.cockpit__gname { overflow-wrap: anywhere; }
+.cockpit__panel > *, .cockpit__body { min-width: 0; }
+.cockpit__points li { overflow-wrap: anywhere; }
+
+/* =============================================================
+   TIMELINE — "LA ROTTA DELLA FATTURA"
+   ============================================================= */
+.route { position: relative; margin-top: 1rem; }
+/* Percorso curvo a "S": un SVG riempie il track, i porti sono posizionati
+   in percentuale esattamente sulle anse (coord viewBox 1000x340). */
+.route__track { position: relative; width: 100%; aspect-ratio: 1000 / 340; }
+.route__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.route__svg path { fill: none; stroke-width: 6; stroke-linecap: round; }
+.route__path-bg { stroke: var(--surface-2); }
+.route__path-fill { stroke: var(--accent); stroke-dasharray: 4000; stroke-dashoffset: 4000; transition: stroke-dashoffset .6s var(--ease); }
+
+.route__ports { list-style: none; margin: 0; padding: 0; }
+.route__ports > li { position: absolute; transform: translate(-50%, -50%); z-index: 2; }
+.route__port { position: relative; background: none; border: 0; -webkit-appearance: none; appearance: none; cursor: pointer; padding: 0; display: block; }
+.route__dot {
+  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--font-head); font-weight: 700; font-size: .85rem; color: var(--text-muted);
+  background: var(--surface); border: 2px solid var(--accent);
+  transition: color .3s, background .3s, border-color .3s, box-shadow .3s;
+}
+.route__name { position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--font-head); font-size: .82rem; color: var(--text-muted); transition: color .3s; }
+.route__port.is-done .route__dot { color: var(--accent-ink); background: var(--lime); border-color: var(--accent); }
+.route__port.is-active .route__dot { color: transparent; background: var(--surface); border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent); }
+.route__port.is-active .route__name { color: var(--ink); }
+.route__port:focus-visible .route__dot { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.route__boat {
+  position: absolute; z-index: 4; left: 8%; top: 26.47%;
+  width: 48px; height: 48px; transform: translate(-50%, -50%);
+  display: grid; place-items: center; border-radius: 50%;
+  color: var(--accent-ink); background: var(--lime); border: 2px solid var(--surface);
+  box-shadow: 0 6px 16px -6px rgba(27,42,23,.45);
+  transition: left .6s var(--ease), top .6s var(--ease);
+}
+.route__boat svg { width: 30px; height: 30px; }
+
+.route__range { width: 100%; margin: 1.4rem 0 .4rem; accent-color: var(--accent); cursor: pointer; }
+.route__range:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+.route__detail {
+  margin-top: 1.6rem; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent);
+  border-radius: var(--radius); padding: clamp(1.5rem, 3vw, 2.1rem); min-height: 150px;
+}
+.route__stage { animation: vimFade .4s var(--ease) both; }
+.route__stage[hidden] { display: none; }
+.route__kicker { font-family: var(--font-head); font-size: .76rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.route__stage h3 { font-size: 1.6rem; margin: .5rem 0 .6rem; color: var(--ink); }
+.route__stage p { color: var(--text); line-height: 1.65; max-width: 70ch; font-size: 1.02rem; }
+
+/* =============================================================
+   RESPONSIVE
+   ============================================================= */
+@media (max-width: 920px) {
+  .vim-hero__grid { grid-template-columns: 1fr; }
+  .cockpit__gauges { grid-template-columns: repeat(2, 1fr); }
+  .cockpit__panel { grid-template-columns: 1fr; gap: 1.4rem; }
+  .cockpit__gaugeview { order: -1; }
+}
+@media (max-width: 620px) {
+  .route__track { aspect-ratio: auto; height: 320px; }
+  .route__dot { width: 30px; height: 30px; }
+  /* Le etichette dei porti si sovrappongono su schermi stretti: le nascondiamo,
+     il nome della tappa è comunque mostrato nel pannello di dettaglio sotto. */
+  .route__name { display: none; }
+  .route__detail { margin-top: 1.1rem; }
+}
+@media (max-width: 420px) {
+  .route__track { height: 280px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vim-metric__bar span, .route__fill, .route__boat, .vim-toggle__thumb,
+  .cockpit__panel, .route__stage, .cockpit__gaugeview { transition: none !important; animation: none !important; }
+}
+
+/* =============================================================
+   CTA "Rotta su misura" — zoom-in ancorato allo scroll
+   ============================================================= */
+.vim-cta { overflow-x: clip; }
+.vim-cta__card { width: 100%; margin: 0; }
+.scale-card[data-zoom-hover] { overflow: hidden; transform-origin: center; will-change: transform, border-radius; }
+@media (prefers-reduced-motion: reduce) {
+  .scale-card[data-zoom-hover] { transform: none !important; border-radius: var(--radius) !important; }
+}
+
+/* La CTA finale si fonde con il footer: stesso fondo scuro, nessun angolo
+   arrotondato in basso e nessuno stacco cromatico verso il footer. */
+body[data-page="vim"] .scale-scene { padding-bottom: 0; }
+body[data-page="vim"] .scale-scene::before { display: none; }
+body[data-page="vim"] .scale-card {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-bottom: 0;
+  padding-bottom: clamp(3.5rem, 8vw, 6.5rem);
+}
+body[data-page="vim"] .site-footer { margin-top: 0; }

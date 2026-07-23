@@ -1,0 +1,20 @@
+/* =============================================================
+   flow-field.css — sfondo neurale dietro un page-hero (.flow-hero)
+   ============================================================= */
+.flow-hero { position: relative; overflow: hidden; background: #06081a; min-height: 360px; }
+
+/* Canvas del flow field (iniettato da flow-field.js), dietro a tutto */
+.flow-hero .ff-canvas { position: absolute; inset: 0; z-index: 0; display: block; }
+
+/* Overlay di leggibilità: riusa lo ::after del page-hero disattivando il glow orb */
+.flow-hero::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  top: auto; right: auto; width: auto; height: auto;      /* annulla l'orb del page-hero */
+  border-radius: 0; filter: none; opacity: 1; animation: none;
+  background:
+    radial-gradient(120% 130% at 28% 0%, transparent 42%, rgba(6,8,26,.55) 100%),
+    linear-gradient(180deg, rgba(6,8,26,.12), rgba(6,8,26,.5));
+}
+
+/* Contenuto dell'hero sopra canvas e overlay */
+.flow-hero .container { position: relative; z-index: 2; }
