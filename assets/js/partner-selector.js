@@ -23,7 +23,7 @@
       topic: "Automazione & Transportation",
       url: null,
       pending: true,
-      logo: "assets/img/partners/tpp.png",
+      logo: "assets/img/partners/logo-tpp.png",
       desc: "Soluzioni di automazione e sistemi per il transportation e la logistica. Tecnologie che rendono i processi fisici più efficienti, tracciabili e integrati con i sistemi gestionali."
     },
     {
