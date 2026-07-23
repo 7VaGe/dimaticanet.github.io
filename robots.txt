@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Pagine obsolete/redirect escluse
+Disallow: /ddm.html
+Disallow: /come-lavoriamo.html
+Disallow: /servizi.html
+Disallow: /sap-aws.html
+
+Sitemap: https://dimaticanet.github.io/sitemap.xml
