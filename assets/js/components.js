@@ -110,6 +110,7 @@
             '<div>' +
               '<h4>Solutions</h4>' +
               '<a href="solutions.html#applications">SAP Applications</a>' +
+              '<a href="sap-vim.html">SAP VIM</a>' +
             '</div>' +
             '<div>' +
               '<h4>Azienda</h4>' +
