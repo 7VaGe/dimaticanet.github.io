@@ -7,4 +7,4 @@ Disallow: /come-lavoriamo.html
 Disallow: /servizi.html
 Disallow: /sap-aws.html
 
-Sitemap: https://dimaticanet.github.io/sitemap.xml
+Sitemap: https://www.dimaticanet.com/sitemap.xml
