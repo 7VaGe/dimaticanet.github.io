@@ -1,35 +1,41 @@
 /* =============================================================
    forms.js
-   Rende funzionali i form (Lavora con noi, Contatti):
-   - validazione nativa dei campi obbligatori
-   - controllo dimensione file (max 2MB) e tipo consentito
-   - messaggio di conferma dopo l'invio
-   NOTA: è una gestione lato front-end. Per l'invio reale va
-   collegato un endpoint (PHP mail, Formspree, API, ecc.).
+   Invio reale dei form (Contatti + Candidatura) verso invia.php,
+   che spedisce l'email via Microsoft Graph (app-only) lato server.
+   - validazione nativa dei campi
+   - controllo dimensione file (max 2MB) lato client
+   - POST via fetch con FormData (multipart) → risposta JSON {ok,message}
+   - messaggio verde (ok) / rosso (err) e stato "invio in corso"
+   L'honeypot "website" e l'hidden "form" viaggiano dentro il FormData.
    ============================================================= */
 (function () {
   "use strict";
 
-  function initForm(form) {
-    var status = form.querySelector(".form-status");
-    var fileInput = form.querySelector('input[type="file"]');
+  var MAX_FILE = 2 * 1024 * 1024; // 2MB
 
-    function showStatus(msg, ok) {
-      if (!status) { alert(msg); return; }
+  function initForm(form) {
+    var status    = form.querySelector(".form-status");
+    var submitBtn = form.querySelector('[type="submit"]');
+    var fileInput = form.querySelector('input[type="file"]');
+    var fileNameEl = form.querySelector(".file-input__name");
+    var btnHTML   = submitBtn ? submitBtn.innerHTML : "";
+
+    function setStatus(msg, kind) { // kind: "ok" | "err" | "info" | ""
+      if (!status) { if (msg) alert(msg); return; }
       status.textContent = msg;
-      status.className = "form-status " + (ok ? "ok" : "err");
+      status.className = "form-status" + (kind ? " " + kind : "");
     }
 
-    // Controllo file: dimensione massima 2MB
+    // Controllo dimensione file lato client (feedback immediato)
     if (fileInput) {
       fileInput.addEventListener("change", function () {
         if (fileInput.files && fileInput.files.length) {
-          var f = fileInput.files[0];
-          if (f.size > 2 * 1024 * 1024) {
-            showStatus("Il file supera i 2MB. Scegline uno più piccolo.", false);
+          if (fileInput.files[0].size > MAX_FILE) {
+            setStatus("Il file supera i 2MB. Scegline uno più piccolo.", "err");
             fileInput.value = "";
-          } else if (status) {
-            status.className = "form-status"; // reset eventuale errore
+            if (fileNameEl) fileNameEl.textContent = "Nessun file selezionato";
+          } else {
+            setStatus("", "");
           }
         }
       });
@@ -37,15 +43,46 @@
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      // Validazione nativa (campi required, email, checkbox)
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-      // Invio simulato lato front-end
-      showStatus("Grazie! Abbiamo ricevuto la tua richiesta: ti ricontatteremo al più presto.", true);
-      form.reset();
-      if (status) setTimeout(function () { status.scrollIntoView({ behavior: "smooth", block: "center" }); }, 50);
+
+      // Validazione nativa (required, email, checkbox privacy, file)
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      var action = form.getAttribute("action") || "invia.php";
+      var data   = new FormData(form);
+
+      if (submitBtn) submitBtn.disabled = true;
+      setStatus("Invio in corso…", "info");
+
+      fetch(action, { method: "POST", body: data })
+        .then(function (r) {
+          return r.text().then(function (txt) {
+            var j = null;
+            try { j = JSON.parse(txt); } catch (err) { /* risposta non-JSON */ }
+            return { httpOk: r.ok, data: j };
+          });
+        })
+        .then(function (res) {
+          var j = res.data;
+          if (j && j.ok) {
+            setStatus(j.message || "Grazie! La tua richiesta è stata inviata.", "ok");
+            form.reset();
+            if (fileNameEl) fileNameEl.textContent = "Nessun file selezionato";
+          } else if (j && j.message) {
+            setStatus(j.message, "err");
+          } else {
+            setStatus("Invio non riuscito. Riprova più tardi o scrivici via email.", "err");
+          }
+        })
+        .catch(function () {
+          setStatus("Errore di rete: controlla la connessione e riprova.", "err");
+        })
+        .then(function () {
+          if (submitBtn) submitBtn.disabled = false;
+          if (submitBtn && btnHTML) submitBtn.innerHTML = btnHTML;
+          if (status) setTimeout(function () {
+            status.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 60);
+        });
     });
   }
 

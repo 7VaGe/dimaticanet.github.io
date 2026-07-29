@@ -1,0 +1,9 @@
+# Segreti e dati sensibili — NON committare
+config.php
+.graph_token_cache.json
+/cv-uploads/*
+!/cv-uploads/.htaccess
+
+# Sistema
+.DS_Store
+Thumbs.db

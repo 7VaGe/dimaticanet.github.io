@@ -7,19 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Contattaci — DimaticaNet Srl</title>
   <meta name="description" content="Contatta DimaticaNet Srl a Monte Argentario (GR), Porto Ercole — Via Caravaggio 71. Email amministrazione@dimaticanet.it, PEC dimaticanet@pec.it">
-  <link rel="canonical" href="https://dimaticanet.github.io/contatti.html">
+  <link rel="canonical" href="https://www.dimaticanet.com/contatti.html">
   <meta name="robots" content="index, follow">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="DimaticaNet">
   <meta property="og:locale" content="it_IT">
   <meta property="og:title" content="Contattaci — DimaticaNet Srl">
   <meta property="og:description" content="Contatta DimaticaNet Srl a Monte Argentario (GR), Porto Ercole — Via Caravaggio 71. Email amministrazione@dimaticanet.it, PEC dimaticanet@pec.it">
-  <meta property="og:url" content="https://dimaticanet.github.io/contatti.html">
-  <meta property="og:image" content="https://dimaticanet.github.io/assets/img/partners/logo-dimaticanet.jpg">
+  <meta property="og:url" content="https://www.dimaticanet.com/contatti.html">
+  <meta property="og:image" content="https://www.dimaticanet.com/assets/img/partners/logo-dimaticanet.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Contattaci — DimaticaNet Srl">
   <meta name="twitter:description" content="Contatta DimaticaNet Srl a Monte Argentario (GR), Porto Ercole — Via Caravaggio 71. Email amministrazione@dimaticanet.it, PEC dimaticanet@pec.it">
-  <meta name="twitter:image" content="https://dimaticanet.github.io/assets/img/partners/logo-dimaticanet.jpg">
+  <meta name="twitter:image" content="https://www.dimaticanet.com/assets/img/partners/logo-dimaticanet.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -55,7 +55,9 @@
         </ul>
       </div>
 
-      <form class="card reveal" data-delay="1" data-form>
+      <form class="card reveal" data-delay="1" data-form action="invia.php" method="post">
+        <input type="hidden" name="form" value="contatti">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" placeholder="Lascia vuoto">
         <div class="form-grid">
           <div class="field"><label for="c-nome">Nome</label><input id="c-nome" name="nome" type="text" placeholder="Nome" required></div>
           <div class="field"><label for="c-azienda">Azienda</label><input id="c-azienda" name="azienda" type="text" placeholder="Azienda"></div>

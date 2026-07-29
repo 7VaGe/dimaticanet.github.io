@@ -1,0 +1,23 @@
+# =============================================================
+#  .htaccess (web root) — protezione file sensibili
+#  invia.php resta accessibile; config.php e la cache del token NO.
+# =============================================================
+
+# La home del sito è index.html (ha priorità su un eventuale index.php di manutenzione)
+DirectoryIndex index.html index.htm index.php
+
+# Apache 2.4+
+<FilesMatch "^(config\.php|\.graph_token_cache\.json|\.gitignore)$">
+    Require all denied
+</FilesMatch>
+
+# Apache 2.2 (fallback)
+<IfModule !mod_authz_core.c>
+    <FilesMatch "^(config\.php|\.graph_token_cache\.json|\.gitignore)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
+
+# Nega l'accesso alla cartella .git (se caricata per errore) e ai file .git*
+RedirectMatch 404 /\.git

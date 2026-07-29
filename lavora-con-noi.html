@@ -7,19 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lavora con noi — DimaticaNet Srl</title>
   <meta name="description" content="Unisciti al team DimaticaNet. Invia il tuo curriculum e cresci con noi nella consulenza SAP IT.">
-  <link rel="canonical" href="https://dimaticanet.github.io/lavora-con-noi.html">
+  <link rel="canonical" href="https://www.dimaticanet.com/lavora-con-noi.html">
   <meta name="robots" content="index, follow">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="DimaticaNet">
   <meta property="og:locale" content="it_IT">
   <meta property="og:title" content="Lavora con noi — DimaticaNet Srl">
   <meta property="og:description" content="Unisciti al team DimaticaNet. Invia il tuo curriculum e cresci con noi nella consulenza SAP IT.">
-  <meta property="og:url" content="https://dimaticanet.github.io/lavora-con-noi.html">
-  <meta property="og:image" content="https://dimaticanet.github.io/assets/img/partners/logo-dimaticanet.jpg">
+  <meta property="og:url" content="https://www.dimaticanet.com/lavora-con-noi.html">
+  <meta property="og:image" content="https://www.dimaticanet.com/assets/img/partners/logo-dimaticanet.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Lavora con noi — DimaticaNet Srl">
   <meta name="twitter:description" content="Unisciti al team DimaticaNet. Invia il tuo curriculum e cresci con noi nella consulenza SAP IT.">
-  <meta name="twitter:image" content="https://dimaticanet.github.io/assets/img/partners/logo-dimaticanet.jpg">
+  <meta name="twitter:image" content="https://www.dimaticanet.com/assets/img/partners/logo-dimaticanet.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -58,7 +58,7 @@
           <div class="p-card__img" style="--img:url('../img/LavoraConNoi.jpg')"></div>
           <div class="p-card__grad"></div>
           <div class="p-card__body">
-            <div class="p-card__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+            <div class="p-card__ic"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
             <h3 class="p-card__title">Team affiatato</h3>
             <p class="p-card__text">Collaborazione reale su progetti SAP concreti, con clienti di ogni dimensione.</p>
           </div>
@@ -81,14 +81,16 @@
           <h2 style="color:#fff">Invia il tuo CV</h2>
           <p style="margin-top:1rem;color:rgba(255,255,255,.9)">Siamo sempre alla ricerca di nuove risorse motivate. Compila il modulo e allega il tuo curriculum: ti ricontatteremo.</p>
         </div>
-        <form class="card reveal" data-delay="1" data-form style="order:-1">
+        <form class="card reveal" data-delay="1" data-form action="invia.php" method="post" enctype="multipart/form-data" style="order:-1">
+          <input type="hidden" name="form" value="lavora">
+          <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" placeholder="Lascia vuoto">
           <div class="form-grid">
             <div class="field"><label for="nome">Nome</label><input id="nome" name="nome" type="text" placeholder="Il tuo nome" required></div>
             <div class="field"><label for="cognome">Cognome</label><input id="cognome" name="cognome" type="text" placeholder="Il tuo cognome" required></div>
             <div class="field full"><label for="email">Email</label><input id="email" name="email" type="email" placeholder="nome@email.it" required></div>
             <div class="field full"><label for="cv">Allega C.V. <span style="color:var(--text-dim)">(.pdf, .doc, .docx — max 2MB)</span></label>
               <div class="file-input">
-                <input id="cv" name="cv" type="file" accept=".pdf,.doc,.docx" class="file-input__native">
+                <input id="cv" name="cv" type="file" accept=".pdf,.doc,.docx" class="file-input__native" required>
                 <label for="cv" class="file-input__btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Scegli file</label>
                 <span class="file-input__name">Nessun file selezionato</span>
               </div>
