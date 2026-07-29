@@ -470,6 +470,7 @@ body.menu-open .nav-toggle span::after  { transform: translate(-50%,-50%) rotate
 .form-status { margin-top: 1.2rem; font-size: .92rem; display: none; padding: .85rem 1.1rem; border-radius: var(--radius-sm); border: 1px solid var(--line-2); }
 .form-status.ok  { display: block; color: var(--accent-ink); background: #dbe7cf; border-color: transparent; }
 .form-status.err { display: block; color: #fff; background: #b5462f; border-color: transparent; }
+.form-status.info { display: block; color: var(--ink); background: var(--surface-2); border-color: var(--line); }
 .file-input { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
 .file-input__native { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; clip: rect(0 0 0 0); }
 .file-input__btn { display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1.1rem; border-radius: 999px; background: transparent; border: 1px solid var(--ink); color: var(--ink); font-family: var(--font-head); font-weight: 500; font-size: .9rem; cursor: pointer; }
